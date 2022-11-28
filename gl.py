@@ -3,10 +3,11 @@
 # Esteban Aldana Guerra 20591
 
 import struct
-from math import *
-from math import sin, cos
+import math
+from math import cos, sin
 from collections import namedtuple
 from textures import *
+import random
 
 V2 = namedtuple('Vertex2', ['x', 'y'])
 V3 = namedtuple('Vertex3', ['x', 'y', 'z'])
@@ -24,6 +25,10 @@ def dword(c):
 
 def color(r,g,b):
 	return bytes([b,g,r])
+
+# Funcion que ayuda a convertir floats para poder usar los colores
+def FloatRGB(array):
+    return [round(i*255) for i in array]
 
 #------ Funciones de operaciones con matrices ------#
 #Suma de vectores
@@ -165,6 +170,7 @@ class Render(object):
         self.light = V3(0,0,1)
         self.activeTexture = None
         self.VertexArray = []
+        self.activeShader = 'planeta'
 
     #Funcion para limpiar
     # Se definen colores con los cuales trabajar
@@ -238,10 +244,8 @@ class Render(object):
         self.current_color  =color
 
     def glColor(self, r, g, b):
-        self.rv = round(255*r)
-        self.gv = round(255*g)
-        self.bv = round(255*b)
-        self.current_color  = color(self.rv, self.gv, self.bv)
+      array_colors = FloatRGB([r,g,b])
+      self.clear_color = color(array_colors[0], array_colors[1], array_colors[2])
 
     #Funcion para el puntos
     def point(self, x, y, color=None):
@@ -297,6 +301,8 @@ class Render(object):
                 if color:
                     self.current_color  = color
                 #Condicon para los datos de la textura
+                if self.activeShader == 'planeta':
+                    color = self.shader(x, y, self.width, self.height)
                 if texture:
                     tA, tB, tC = texture_coords
                     tx = tA.x * w + tB.x * v + tC.x * u
@@ -415,6 +421,105 @@ class Render(object):
         #retornamos los Valores
         return V3(*transformVector)
 
+    def shader(self, x, y, maxx, maxy):
+        color = [23, 54, 158]
+        point = [670, 470]
+        #norte america
+
+        # y < 1080 tamaño de la pantalla menos donde se quiere que empiece la linea que se pinta, el otro y>1080 - donde va a terminar la linea definiedo el grosor
+        # y el de x donde se quiere que empieze la linea de izquierda a derecha
+        #y se le resta un numero random para que las lineas no queden tan marcadas, sino que se desvanezcan un poco
+        if y < 1080 and y > 1080 - 170 - random.randint(0,5) and x < 1000- random.randint(0,10):
+            color = [125, 206, 160]
+            #nube
+        if y < 1080-170 and y > 1080 - 195 - random.randint(0,5) and x < 1100- random.randint(0,10) and x >1020- random.randint(0,10):
+            color = [255,255,255]
+
+        if y < 1080 - 100 and y > 1080 - 185 - random.randint(0,5) and x < 980- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 180 and y > 1080 - 235 - random.randint(0,5) and x < 920- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 230 and y > 1080 - 285 - random.randint(0,5) and x < 900- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 280 and y > 1080 - 335 - random.randint(0,5) and x < 860 - random.randint(0,10) and x > 660- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 330 and y > 1080 - 370 - random.randint(0,5) and x < 840 - random.randint(0,10) and x > 690- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 365 and y > 1080 - 385 - random.randint(0,5) and x < 820 - random.randint(0,10) and x > 695- random.randint(0,10):
+            color = [125, 206, 160]
+            #nube
+        if y < 1080 - 365 and y > 1080 - 385 - random.randint(0,5) and x < 2000 - random.randint(0,10) and x > 1060- random.randint(0,10):
+            color = [255,255,255]
+        if y < 1080 - 380 and y > 1080 - 410 - random.randint(0,5) and x < 2000 - random.randint(0,10) and x > 1080- random.randint(0,10):
+            color = [255,255,255]
+
+        if y < 1080 - 380 and y > 1080 - 405 - random.randint(0,5) and x < 800 - random.randint(0,10) and x > 710- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 400 and y > 1080 - 420 - random.randint(0,5) and x < 800 - random.randint(0,10) and x > 730- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 415 and y > 1080 - 440 - random.randint(0,5) and x < 800 - random.randint(0,10) and x > 730- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 430 and y > 1080 - 460 - random.randint(0,5) and x < 820 - random.randint(0,10) and x > 770- random.randint(0,10):
+            color = [125, 206, 160]
+        #centro america
+        if y < 1080 - 455 and y > 1080 - 480 - random.randint(0,5) and x < 840 - random.randint(0,10) and x > 770- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 475 and y > 1080 - 500 - random.randint(0,5) and x < 860 - random.randint(0,10) and x > 770- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 450 and y > 1080 - 470 - random.randint(0,5) and x < 970 - random.randint(0,10) and x > 880- random.randint(0,10):
+            color = [125, 206, 160]
+            #nube
+        if y < 1080 - 480 and y > 1080 - 505 - random.randint(0,5) and x < 1200 - random.randint(0,10) and x > 1020- random.randint(0,10):
+            color = [255,255,255]
+
+        if y < 1080 - 495 and y > 1080 - 515 - random.randint(0,5) and x < 880 - random.randint(0,10) and x > 790- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 510 and y > 1080 - 530 - random.randint(0,5) and x < 880 - random.randint(0,10) and x > 810- random.randint(0,10):
+            color = [125, 206, 160]
+        
+        #sur america
+        if y < 1080 - 525 and y > 1080 - 550 - random.randint(0,5) and x < 1100 - random.randint(0,10) and x > 880- random.randint(0,10):
+            color = [125, 206, 160] 
+        if y < 1080 - 545 and y > 1080 - 570 - random.randint(0,5) and x < 1130 - random.randint(0,10) and x > 880- random.randint(0,10):
+            color = [125, 206, 160] 
+        if y < 1080 - 565 and y > 1080 - 595 - random.randint(0,5) and x < 1145 - random.randint(0,10) and x > 860- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 590 and y > 1080 - 620 - random.randint(0,5) and x < 1185 - random.randint(0,10) and x > 850- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 615 and y > 1080 - 650 - random.randint(0,5) and x < 1200 - random.randint(0,10) and x > 850- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 635 and y > 1080 - 680 - random.randint(0,5) and x < 1220 - random.randint(0,10) and x > 860- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 675 and y > 1080 - 710 - random.randint(0,5) and x < 1190 - random.randint(0,10) and x > 880- random.randint(0,10):
+            color = [125, 206, 160] 
+        if y < 1080 - 705 and y > 1080 - 740 - random.randint(0,5) and x < 1150 - random.randint(0,10) and x > 920- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 735 and y > 1080 - 780 - random.randint(0,5) and x < 1110 - random.randint(0,10) and x > 960- random.randint(0,10):
+            color = [125, 206, 160]
+        if y < 1080 - 775 and y > 1080 - 810 - random.randint(0,5) and x < 1080 - random.randint(0,10) and x > 990- random.randint(0,10):
+            color = [125, 206, 160]
+            #nube
+        if y < 1080 - 775 and y > 1080 - 810 - random.randint(0,5) and x < 1150 - random.randint(0,10) and x > 1000- random.randint(0,10):
+            color = [255,255,255]
+
+        if y < 1080 - 805 and y > 1080 - 840 - random.randint(0,5) and x < 1050 - random.randint(0,10) and x > 990- random.randint(0,10):
+            color = [125, 206, 160] 
+        if y < 1080 - 835 and y > 1080 - 870 - random.randint(0,5) and x < 1010 - random.randint(0,10) and x > 990- random.randint(0,10):
+            color = [125, 206, 160]
+            #nube
+        if y < 1080 - 835 and y > 1080 - 870 - random.randint(0,5) and x < 1100 - random.randint(0,10) and x > 1030- random.randint(0,10):
+            color = [255,255,255] 
+    
+        #polo
+        if y < 1080 - 910 + random.randint(0,10) and y > 1080 - 1000 - random.randint(0,10): 
+            color = [223, 228, 247]
+
+
+        d = math.dist([point[0], point[1]], [x, y]) / 720
+        d = 1-d
+        color = [c*d for c in color]
+        return self.glColor(color[0]/255,color[1]/255,color[2]/255)
+    
     #Funcion para la vista
     def lookAt(self, eye, center, up):
         z = norm(sub(eye, center))
